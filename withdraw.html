@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>withdraw </title>
+  <style>
+    *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b1120;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+overflow-x:hidden;
+position:relative;
+}
+
+/* Background Animation */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+overflow:hidden;
+background:#0b1120;
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+background:#00e5ff;
+border-radius:50%;
+filter:blur(180px);
+top:-250px;
+left:-250px;
+opacity:.5;
+animation:glow1 12s linear infinite alternate;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+background:#00ff88;
+border-radius:50%;
+filter:blur(180px);
+bottom:-250px;
+right:-250px;
+opacity:.5;
+animation:glow2 12s linear infinite alternate;
+}
+
+@keyframes glow1{
+0%{transform:translate(0,0);}
+100%{transform:translate(250px,250px);}
+}
+
+@keyframes glow2{
+0%{transform:translate(0,0);}
+100%{transform:translate(-250px,-250px);}
+}
+
+/* Main Container */
+
+.withdraw-container{
+position:relative;
+width:100%;
+max-width:450px;
+padding:30px;
+border-radius:25px;
+overflow:hidden;
+z-index:2;
+}
+
+.withdraw-container::before{
+content:"";
+position:absolute;
+width:220%;
+height:220%;
+top:-60%;
+left:-60%;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+animation:borderRotate 5s linear infinite;
+}
+
+.withdraw-container::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111827;
+border-radius:22px;
+z-index:0;
+}
+
+.withdraw-container *{
+position:relative;
+z-index:2;
+}
+
+@keyframes borderRotate{
+100%{
+transform:rotate(360deg);
+}
+}
+
+/* Header */
+
+.header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.header h1{
+font-size:38px;
+color:#00e5ff;
+text-shadow:0 0 20px #00e5ff;
+margin-bottom:8px;
+}
+
+.header p{
+color:#cbd5e1;
+}
+
+/* Balance Card */
+
+.balance-card{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+text-align:center;
+margin-bottom:20px;
+}
+
+.balance-card h3{
+color:#cbd5e1;
+margin-bottom:10px;
+}
+
+.balance-card h2{
+color:#00ff88;
+font-size:32px;
+font-weight:bold;
+}
+
+/* Note Card */
+
+.note-card{
+background:#1e293b;
+padding:18px;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+.note-card h3{
+color:#00e5ff;
+margin-bottom:10px;
+}
+
+.note-card p{
+color:#cbd5e1;
+margin-bottom:8px;
+line-height:1.5;
+}
+
+/* Inputs */
+
+.input-box{
+position:relative;
+margin-bottom:20px;
+}
+
+.input-box input,
+.input-box select{
+width:100%;
+padding:15px;
+border:none;
+outline:none;
+background:#1e293b;
+border-radius:12px;
+color:white;
+font-size:15px;
+}
+
+.input-box label{
+position:absolute;
+left:15px;
+top:15px;
+color:#94a3b8;
+pointer-events:none;
+transition:.3s;
+}
+
+.input-box input:focus + label,
+.input-box input:valid + label{
+top:-10px;
+left:10px;
+font-size:12px;
+padding:2px 8px;
+background:#111827;
+border-radius:10px;
+color:#00e5ff;
+}
+
+/* Withdraw Button */
+
+.withdraw-btn{
+position:relative;
+width:100%;
+height:55px;
+border:none;
+border-radius:15px;
+background:transparent;
+overflow:hidden;
+cursor:pointer;
+margin-top:10px;
+}
+
+.withdraw-btn::before{
+content:"";
+position:absolute;
+width:300%;
+height:300%;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+top:-100%;
+left:-100%;
+animation:btnRotate 2s linear infinite;
+}
+
+.withdraw-btn::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111827;
+border-radius:12px;
+}
+
+.withdraw-btn span{
+position:relative;
+z-index:2;
+color:white;
+font-size:16px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+@keyframes btnRotate{
+100%{
+transform:rotate(360deg);
+}
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.withdraw-container{
+padding:20px;
+}
+
+.header h1{
+font-size:32px;
+}
+
+.balance-card h2{
+font-size:26px;
+}
+
+}
+.back-btn{
+position:absolute;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:#00e5ff;
+color:#111827;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 0 15px #00e5ff;
+transition:.3s;
+z-index:9999;
+}
+
+.back-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px #00e5ff;
+}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <a href="dashboard.html" class="back-btn">
+←
+</a>
+  <div class="bg-animation"></div>
+
+<div class="withdraw-container">
+
+<div class="header">
+<h1>BULFEX</h1>
+<p>Withdraw Funds</p>
+</div>
+
+<!-- Balance -->
+
+<div class="balance-card">
+
+<h3>Available Balance</h3>
+
+<h2 id="userBalance">0 PKR</h2>
+
+</div>
+
+<!-- Note -->
+
+<div class="note-card">
+
+<h3>⚠ Important Notice</h3>
+
+<p>Please enter correct account details.</p>
+
+<p>Withdraw requests are manually reviewed.</p>
+
+<p>Processing time may take up to 24 hours.</p>
+
+</div>
+
+<!-- Form -->
+
+<form id="withdrawForm">
+
+<div class="input-box">
+
+<input
+type="text"
+id="fullName"
+required>
+
+<label>Full Name</label>
+
+</div>
+
+<div class="input-box">
+
+<input
+type="number"
+id="amount"
+required>
+
+<label>Withdraw Amount</label>
+
+</div>
+
+<div class="input-box">
+
+<select id="paymentMethod" required>
+
+<option value="">
+Select Payment Method
+</option>
+
+<option value="Easypaisa">
+EasyPaisa
+</option>
+
+<option value="JazzCash">
+JazzCash
+</option>
+
+</select>
+
+</div>
+
+<div class="input-box">
+
+<input
+type="text"
+id="accountNumber"
+required>
+
+<label>Account Number</label>
+
+</div>
+
+<button
+type="submit"
+class="withdraw-btn">
+
+<span>
+SUBMIT REQUEST
+</span>
+
+</button>
+
+</form>
+
+</div>
+<script type="module">
+  import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+getDoc,
+collection,
+addDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64",
+
+measurementId: "G-TXMXNZDMMW"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* Load Balance */
+
+onAuthStateChanged(auth, async(user)=>{
+
+if(!user){
+
+window.location.href="login.html";
+
+return;
+
+}
+
+const userRef =
+doc(db,"users",user.uid);
+
+const userSnap =
+await getDoc(userRef);
+
+if(userSnap.exists()){
+
+document.getElementById("userBalance")
+.innerText =
+(userSnap.data().profit || 0)
++ " PKR";
+
+}
+
+});
+
+
+/* Withdraw Request */
+
+document
+.getElementById("withdrawForm")
+.addEventListener("submit", async(e)=>{
+
+e.preventDefault();
+
+const user =
+auth.currentUser;
+
+if(!user){
+
+Swal.fire({
+icon:"warning",
+title:"Login Required"
+});
+
+return;
+
+}
+
+const fullName =
+document.getElementById("fullName").value;
+
+const amount =
+Number(document.getElementById("amount").value);
+
+const paymentMethod =
+document.getElementById("paymentMethod").value;
+
+const accountNumber =
+document.getElementById("accountNumber").value;
+
+if(paymentMethod===""){
+
+Swal.fire({
+icon:"warning",
+title:"Select Payment Method"
+});
+
+return;
+
+}
+
+try{
+
+const userRef =
+doc(db,"users",user.uid);
+
+const userSnap =
+await getDoc(userRef);
+
+const userData =
+userSnap.data();
+
+const availableBalance =
+userData.profit || 0;
+
+if(amount > availableBalance){
+
+Swal.fire({
+icon:"error",
+title:"Insufficient Balance",
+text:"You don't have enough balance"
+});
+
+return;
+
+}
+
+await updateDoc(userRef,{
+
+profit:
+availableBalance - amount,
+
+totalWithdraw:
+(userData.totalWithdraw || 0)
++ amount
+
+});
+
+await addDoc(
+collection(db,"withdrawRequests"),
+{
+
+uid:user.uid,
+
+name:fullName,
+
+amount:amount,
+
+paymentMethod:paymentMethod,
+
+accountNumber:accountNumber,
+
+status:"pending",
+
+createdAt:new Date().toISOString()
+
+}
+);
+
+Swal.fire({
+icon:"success",
+title:"Request Submitted",
+text:"Your Withdraw Request Has Been Sent",
+confirmButtonColor:"#00e5ff"
+});
+
+document
+.getElementById("withdrawForm")
+.reset();
+
+document.getElementById(
+"userBalance"
+).innerText =
+(availableBalance - amount)
+
++ " PKR";
+
+}
+catch(error){
+
+Swal.fire({
+icon:"error",
+title:"Error",
+text:error.message
+});
+
+}
+
+});
+</script>
+</body>
+</html>

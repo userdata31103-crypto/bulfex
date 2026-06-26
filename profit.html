@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BULFEX PROFIT</title>
+<style>
+  *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b1120;
+min-height:100vh;
+padding:20px;
+overflow-x:hidden;
+position:relative;
+}
+
+/* Background Animation */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0b1120;
+z-index:0;
+overflow:hidden;
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+background:#00e5ff;
+border-radius:50%;
+filter:blur(180px);
+top:-250px;
+left:-250px;
+opacity:.4;
+animation:glow1 12s linear infinite alternate;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+background:#00ff88;
+border-radius:50%;
+filter:blur(180px);
+bottom:-250px;
+right:-250px;
+opacity:.4;
+animation:glow2 12s linear infinite alternate;
+}
+
+@keyframes glow1{
+0%{transform:translate(0,0);}
+100%{transform:translate(250px,250px);}
+}
+
+@keyframes glow2{
+0%{transform:translate(0,0);}
+100%{transform:translate(-250px,-250px);}
+}
+
+/* Container */
+
+.profit-container{
+position:relative;
+z-index:2;
+max-width:500px;
+margin:auto;
+}
+
+/* Header */
+
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.header h1{
+font-size:38px;
+color:#00e5ff;
+text-shadow:0 0 20px #00e5ff;
+margin-bottom:10px;
+}
+
+.header p{
+color:#cbd5e1;
+}
+
+/* Cards */
+
+.card{
+position:relative;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+overflow:hidden;
+text-align:center;
+}
+
+.card::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+top:-50%;
+left:-50%;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+animation:borderRotate 6s linear infinite;
+}
+
+.card::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111827;
+border-radius:18px;
+z-index:0;
+}
+
+.card *{
+position:relative;
+z-index:2;
+}
+
+@keyframes borderRotate{
+100%{
+transform:rotate(360deg);
+}
+}
+
+.card h3{
+color:#94a3b8;
+margin-bottom:10px;
+}
+
+.card h2{
+color:white;
+font-size:26px;
+}
+
+/* Claim Button */
+
+#claimBtn{
+width:100%;
+height:60px;
+border:none;
+border-radius:15px;
+background:#00e5ff;
+color:#111827;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+transition:.3s;
+}
+
+#claimBtn:hover{
+transform:translateY(-3px);
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.header h1{
+font-size:30px;
+}
+
+.card h2{
+font-size:22px;
+}
+
+}
+.back-btn{
+position:absolute;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:#00e5ff;
+color:#111827;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 0 15px #00e5ff;
+transition:.3s;
+z-index:9999;
+}
+
+.back-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px #00e5ff;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<a href="dashboard.html" class="back-btn">
+←
+</a>
+<div class="bg-animation"></div>
+
+<div class="profit-container">
+
+<div class="header">
+<h1>BULFEX PROFIT</h1>
+<p>Claim Your Daily Profit</p>
+</div>
+
+<div class="card">
+
+<h3>📦 Active Plan</h3>
+
+<h2 id="planName">
+Loading...
+</h2>
+
+</div>
+
+<div class="card">
+
+<h3>💰 Plan Amount</h3>
+
+<h2 id="planAmount">
+0 PKR
+</h2>
+
+</div>
+
+<div class="card">
+
+<h3>📈 Daily Profit</h3>
+
+<h2 id="dailyProfit">
+0 PKR
+</h2>
+
+</div>
+
+<div class="card">
+
+<h3>🏆 Total Profit</h3>
+
+<h2 id="totalProfit">
+0 PKR
+</h2>
+
+</div>
+
+<div class="card">
+
+<h3>⏰ Last Claim</h3>
+
+<h2 id="lastClaim">
+Never
+</h2>
+
+</div>
+
+<button id="claimBtn">
+
+🎁 CLAIM PROFIT
+
+</button>
+
+</div>
+
+<script type="module" >
+  import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+getDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+const user = auth.currentUser;
+
+const planProfit = {
+"Basic Plan":25,
+"Starter Plan":50,
+"Silver Plan":120,
+"Gold Plan":180,
+"Diamond Plan":229,
+"VIP Plan":300,
+"Premium Plan":900,
+"Elite Plan":1200
+};
+
+async function loadUserData(){
+
+const user = auth.currentUser;
+
+if(!user) return;
+
+const userRef =
+doc(db,"users",user.uid);
+
+const userSnap =
+await getDoc(userRef);
+
+if(!userSnap.exists()) return;
+
+const data =
+userSnap.data();
+
+document.getElementById("planName")
+.innerText =
+data.activePlan || "No Active Plan";
+
+document.getElementById("planAmount")
+.innerText =
+(data.planAmount || 0) + " PKR";
+
+document.getElementById("totalProfit")
+.innerText =
+(data.profit || 0) + " PKR";
+
+const daily =
+planProfit[data.activePlan] || 0;
+
+document.getElementById("dailyProfit")
+.innerText =
+daily + " PKR";
+
+document.getElementById("lastClaim")
+.innerText =
+data.lastClaim
+? new Date(data.lastClaim)
+.toLocaleString()
+: "Never";
+
+}
+
+document
+.getElementById("claimBtn")
+.addEventListener("click",async()=>{
+
+const user =
+auth.currentUser;
+
+if(!user) return;
+
+const userRef =
+doc(db,"users",user.uid);
+
+const userSnap =
+await getDoc(userRef);
+
+const data =
+userSnap.data();
+
+if(!data.activePlan){
+
+Swal.fire({
+icon:"warning",
+title:"No Active Plan"
+});
+
+return;
+}
+
+const now = Date.now();
+
+const lastClaim =
+data.lastClaim
+? new Date(data.lastClaim).getTime()
+: 0;
+
+const diff =
+now - lastClaim;
+
+const hours24 =
+24 * 60 * 60 * 1000;
+
+if(diff < hours24){
+
+const remaining =
+Math.ceil(
+(hours24 - diff)
+/1000/60/60
+);
+
+Swal.fire({
+icon:"warning",
+title:"Already Claimed",
+text:
+"Wait " +
+remaining +
+" hours"
+});
+
+return;
+}
+
+const daily =
+planProfit[data.activePlan] || 0;
+
+await updateDoc(userRef,{
+
+profit:
+(data.profit || 0)
++ daily,
+
+lastClaim:
+new Date().toISOString()
+
+});
+
+Swal.fire({
+icon:"success",
+title:"Profit Claimed",
+text:
+daily + " PKR Added"
+});
+
+loadUserData();
+
+});
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+if(user){
+
+loadUserData();
+
+}
+
+});
+</script>
+
+</body>
+</html>

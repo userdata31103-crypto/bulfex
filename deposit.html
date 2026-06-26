@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BULFEX Deposit Plans</title>
+
+<style>
+  *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b1120;
+min-height:100vh;
+overflow-x:hidden;
+padding:20px;
+position:relative;
+}
+
+/* Background Animation */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:0;
+pointer-events:none;
+background:#0b1120;
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:900px;
+height:900px;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+border-radius:50%;
+filter:blur(120px);
+top:-250px;
+left:-250px;
+animation:rotateGlow1 15s linear infinite;
+opacity:.7;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:900px;
+height:900px;
+background:conic-gradient(
+transparent,
+#00ff88,
+transparent,
+#7c3aed,
+transparent
+);
+border-radius:50%;
+filter:blur(120px);
+bottom:-250px;
+right:-250px;
+animation:rotateGlow2 18s linear infinite;
+opacity:.7;
+}
+
+@keyframes rotateGlow1{
+from{
+transform:rotate(0deg);
+}
+to{
+transform:rotate(360deg);
+}
+}
+
+@keyframes rotateGlow2{
+from{
+transform:rotate(360deg);
+}
+to{
+transform:rotate(0deg);
+}
+}
+
+/* Main Container */
+
+.container{
+position:relative;
+z-index:2;
+max-width:1200px;
+margin:auto;
+}
+
+/* Header */
+
+.header{
+text-align:center;
+margin-bottom:35px;
+animation:fadeDown .8s ease;
+}
+
+.header h1{
+font-size:42px;
+color:#00e5ff;
+margin-bottom:10px;
+text-shadow:0 0 20px #00e5ff;
+}
+
+.header p{
+color:#cbd5e1;
+font-size:17px;
+}
+
+@keyframes fadeDown{
+from{
+opacity:0;
+transform:translateY(-30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Plans Grid */
+
+.plans{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+/* Plan Card */
+
+.plan{
+position:relative;
+padding:25px;
+border-radius:25px;
+overflow:hidden;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+animation:fadeUp .8s ease;
+}
+
+.plan::before{
+content:"";
+position:absolute;
+width:220%;
+height:220%;
+top:-60%;
+left:-60%;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+animation:rotateBorder 5s linear infinite;
+}
+
+.plan::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111827;
+border-radius:22px;
+z-index:0;
+}
+
+.plan *{
+position:relative;
+z-index:2;
+}
+
+@keyframes rotateBorder{
+100%{
+transform:rotate(360deg);
+}
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.plan:hover{
+transform:translateY(-8px);
+transition:.4s;
+}
+
+.plan h2{
+color:#fff;
+margin-bottom:15px;
+font-size:24px;
+text-align:center;
+}
+
+.plan p{
+color:#cbd5e1;
+margin-bottom:10px;
+font-size:15px;
+}
+
+/* Premium Highlight */
+
+.premium{
+box-shadow:0 0 30px rgba(0,229,255,.3);
+}
+
+.elite{
+box-shadow:0 0 35px rgba(124,58,237,.4);
+}
+
+/* Invest Button */
+
+.invest-btn{
+position:relative;
+width:100%;
+height:55px;
+margin-top:15px;
+border:none;
+border-radius:15px;
+background:transparent;
+overflow:hidden;
+cursor:pointer;
+}
+
+.invest-btn::before{
+content:"";
+position:absolute;
+width:300%;
+height:300%;
+top:-100%;
+left:-100%;
+background:conic-gradient(
+transparent,
+#00e5ff,
+transparent,
+#00ff88,
+transparent
+);
+animation:rotateBtn 2s linear infinite;
+}
+
+.invest-btn::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111827;
+border-radius:12px;
+}
+
+.invest-btn span{
+position:relative;
+z-index:2;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+@keyframes rotateBtn{
+100%{
+transform:rotate(360deg);
+}
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.header h1{
+font-size:34px;
+}
+
+.plans{
+grid-template-columns:1fr;
+}
+
+.plan{
+padding:20px;
+}
+
+}
+.back-btn{
+position: absolute;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:#00e5ff;
+color:#111827;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 0 15px #00e5ff;
+transition:.3s;
+z-index:9999;
+}
+
+.back-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px #00e5ff;
+}
+</style>
+
+</head>
+<body>
+<a href="dashboard.html" class="back-btn">
+←
+</a>
+<div class="bg-animation"></div>
+
+<div class="container">
+
+<div class="header">
+<h1>BULFEX</h1>
+<p>Choose Your favourite  Plan</p>
+</div>
+
+<div class="plans">
+
+<!-- Basic -->
+<div class="plan">
+<h2>🟢 Basic Plan</h2>
+<p>💰 Price: 300 PKR</p>
+<p>📈 Daily Profit: 25 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 750 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Basic Plan',300)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Starter -->
+<div class="plan">
+<h2>🔵 Starter Plan</h2>
+<p>💰 Price: 500 PKR</p>
+<p>📈 Daily Profit: 50 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 2500 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Starter Plan',500)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Silver -->
+<div class="plan">
+<h2>🟣 Silver Plan</h2>
+<p>💰 Price: 1000 PKR</p>
+<p>📈 Daily Profit: 120 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 3600 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Silver Plan',1000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Gold -->
+<div class="plan">
+<h2>💎 Gold Plan</h2>
+<p>💰 Price: 2000 PKR</p>
+<p>📈 Daily Profit: 180 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 5400 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Gold Plan',2000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Diamond -->
+<div class="plan">
+<h2>🔥 Diamond Plan</h2>
+<p>💰 Price: 3000 PKR</p>
+<p>📈 Daily Profit: 229 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 6870 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Diamond Plan',3000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- VIP -->
+<div class="plan">
+<h2>👑 VIP Plan</h2>
+<p>💰 Price: 5000 PKR</p>
+<p>📈 Daily Profit: 300 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 9000 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('VIP Plan',5000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Premium -->
+<div class="plan premium">
+<h2>🚀 Premium Plan</h2>
+<p>💰 Price: 10000 PKR</p>
+<p>📈 Daily Profit: 900 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 27000 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Premium Plan',10000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+<!-- Elite -->
+<div class="plan elite">
+<h2>🌟 Elite Plan</h2>
+<p>💰 Price: 15000 PKR</p>
+<p>📈 Daily Profit: 1200 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 36000 PKR</p>
+
+<button class="invest-btn"
+onclick="selectPlan('Elite Plan',15000)">
+<span>🚀 Invest Now</span>
+</button>
+</div>
+
+</div>
+
+</div>
+
+<script type="module">
+      window.selectPlan = function(planName, price){
+
+localStorage.setItem("selectedPlan", planName);
+
+localStorage.setItem("selectedPrice", price);
+
+window.location.href = "payment.html";
+
+};
+</script>
+
+</body>
+</html>

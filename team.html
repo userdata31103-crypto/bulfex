@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>team </title>
+  <style>
+    /* ===========================
+   ACTIVE TEAM
+=========================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#042b4d,#00796b);
+
+min-height:100vh;
+
+padding:20px;
+
+color:#fff;
+
+}
+
+.back-btn{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+width:45px;
+
+height:45px;
+
+border-radius:50%;
+
+background:#00e5ff;
+
+color:#000;
+
+text-decoration:none;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:24px;
+
+font-weight:bold;
+
+box-shadow:0 0 20px #00e5ff;
+
+z-index:999;
+
+}
+
+.team-card{
+
+max-width:600px;
+
+margin:70px auto;
+
+background:#111827;
+
+border:2px solid #00e5ff;
+
+border-radius:25px;
+
+padding:20px;
+
+box-shadow:0 0 25px rgba(0,229,255,.35);
+
+}
+
+.team-card h2{
+
+text-align:center;
+
+color:#00e5ff;
+
+margin-bottom:25px;
+
+font-size:34px;
+
+}
+
+.team-stats{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:15px;
+
+margin-bottom:25px;
+
+}
+
+.team-box{
+
+background:#1b2338;
+
+border:2px solid #00e5ff;
+
+border-radius:18px;
+
+padding:25px;
+
+text-align:center;
+
+transition:.3s;
+
+}
+
+.team-box:hover{
+
+transform:translateY(-5px);
+
+box-shadow:0 0 20px #00e5ff;
+
+}
+
+.team-box h3{
+
+font-size:32px;
+
+color:#00ff88;
+
+margin-bottom:10px;
+
+}
+
+.team-box p{
+
+color:#ddd;
+
+font-size:16px;
+
+}
+
+.history-title{
+
+margin:20px 0;
+
+color:#00e5ff;
+
+font-size:25px;
+
+}
+
+.history-item{
+
+background:#1b2338;
+
+border-left:5px solid #00e5ff;
+
+border-radius:15px;
+
+padding:15px;
+
+margin-bottom:15px;
+
+}
+
+.history-item h4{
+
+margin-bottom:10px;
+
+}
+
+.history-item p{
+
+line-height:1.8;
+
+color:#ddd;
+
+}
+
+@media(max-width:600px){
+
+.team-stats{
+
+grid-template-columns:1fr;
+
+}
+
+.team-card{
+
+margin-top:80px;
+
+}
+
+}
+  </style>
+</head>
+<body>
+  <div class="team-card">
+
+<h2>
+👥 Active Team
+</h2>
+
+<div class="team-stats">
+
+<div class="team-box">
+
+<h3 id="referralCount">
+0
+</h3>
+
+<p>
+Total Referrals
+</p>
+
+</div>
+
+<div class="team-box">
+
+<h3 id="referralIncome">
+0 PKR
+</h3>
+
+<p>
+Referral Income
+</p>
+
+</div>
+
+</div>
+
+<h3 class="history-title">
+📜 Team History
+</h3>
+
+<div id="teamHistory">
+
+<div class="history-item">
+
+<p>
+No Referral Yet
+</p>
+
+</div>
+
+</div>
+
+</div>
+<script type="module">
+  import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+getDoc,
+collection,
+query,
+where,
+orderBy,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64"
+
+};
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+onAuthStateChanged(auth,
+async(user)=>{
+
+if(!user){
+
+window.location.href=
+"login.html";
+
+return;
+
+}
+
+const userSnap=
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(userSnap.exists()){
+
+const data=userSnap.data();
+
+document.getElementById(
+"referralIncome"
+).innerText=
+(data.referralIncome||0)
++" PKR";
+
+document.getElementById(
+"referralCount"
+).innerText=
+(data.totalReferrals||0);
+
+}
+
+const history=
+document.getElementById(
+"teamHistory"
+);
+
+history.innerHTML="";
+
+const q=query(
+
+collection(db,"referralHistory"),
+
+where("referrerUid","==",user.uid),
+
+orderBy("date","desc")
+
+);
+
+const snap=
+await getDocs(q);
+
+if(snap.empty){
+
+history.innerHTML=`
+
+<div class="history-item">
+
+<p>No Referral Yet</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+snap.forEach(doc=>{
+
+const d=doc.data();
+
+history.innerHTML+=`
+
+<div class="history-item">
+
+<h4>👤 ${d.name}</h4>
+
+<p>💰 Deposit :
+${d.deposit} PKR</p>
+
+<p>🎁 Commission :
++${d.commission} PKR</p>
+
+<p>📅 ${d.date}</p>
+
+</div>
+
+`;
+
+});
+
+});
+</script>
+</body>
+</html>

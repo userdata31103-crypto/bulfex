@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Deposit History</title>
+
+<style>
+  *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b1120;
+min-height:100vh;
+padding:20px;
+overflow-x:hidden;
+position:relative;
+}
+
+/* Background Animation */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+overflow:hidden;
+background:#0b1120;
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+background:#00e5ff;
+border-radius:50%;
+filter:blur(180px);
+top:-200px;
+left:-200px;
+opacity:.3;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+background:#00ff88;
+border-radius:50%;
+filter:blur(180px);
+bottom:-200px;
+right:-200px;
+opacity:.3;
+}
+
+/* Container */
+
+.container{
+position:relative;
+z-index:2;
+max-width:900px;
+margin:auto;
+}
+
+/* Header */
+
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.header h1{
+font-size:34px;
+color:#00e5ff;
+margin-bottom:10px;
+text-shadow:0 0 15px #00e5ff;
+}
+
+.header p{
+color:#cbd5e1;
+}
+
+/* History Cards */
+
+.history-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+border:1px solid rgba(0,229,255,.3);
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+}
+
+.history-card h3{
+color:#00e5ff;
+margin-bottom:10px;
+}
+
+.history-card p{
+color:#cbd5e1;
+margin-bottom:8px;
+}
+
+/* Status Colors */
+
+.pending{
+color:#facc15;
+font-weight:bold;
+}
+
+.approved{
+color:#22c55e;
+font-weight:bold;
+}
+
+.rejected{
+color:#ef4444;
+font-weight:bold;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.container{
+max-width:100%;
+}
+
+.header h1{
+font-size:28px;
+}
+
+.history-card{
+padding:15px;
+}
+
+}
+.back-btn{
+position:absolute;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:#00e5ff;
+color:#111827;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 0 15px #00e5ff;
+transition:.3s;
+z-index:9999;
+}
+
+.back-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px #00e5ff;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+<a href="dashboard.html" class="back-btn">
+←
+</a>
+<div class="bg-animation"></div>
+
+<div class="container">
+
+<div class="header">
+
+<h1>📥 Deposit History</h1>
+
+<p>
+All Your Deposit Requests
+</p>
+
+</div>
+
+<div id="historyContainer">
+
+<div class="history-card">
+
+<h3>Loading...</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<script type="module"> 
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
+onAuthStateChanged(
+auth,
+async(user)=>{
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+return;
+
+}
+
+loadDepositHistory(user.uid);
+
+});
+
+async function loadDepositHistory(uid){
+
+const container =
+document.getElementById(
+"historyContainer"
+);
+
+container.innerHTML = "";
+
+try{
+
+const q =
+query(
+collection(
+db,
+"depositRequests"
+),
+where(
+"uid",
+"==",
+uid
+)
+);
+
+const snapshot =
+await getDocs(q);
+
+if(snapshot.empty){
+
+container.innerHTML = `
+
+<div class="history-card">
+
+<h3>
+No Deposit History
+</h3>
+
+</div>
+
+`;
+
+return;
+
+}
+
+snapshot.forEach((docSnap)=>{
+
+const data =
+docSnap.data();
+
+let statusClass =
+"pending";
+
+if(
+data.status ===
+"approved"
+){
+
+statusClass =
+"approved";
+
+}
+
+if(
+data.status ===
+"rejected"
+){
+
+statusClass =
+"rejected";
+
+}
+
+container.innerHTML += `
+
+<div class="history-card">
+
+<h3>
+${data.plan}
+</h3>
+
+<p>
+Amount:
+${data.amount} PKR
+</p>
+
+<p>
+Method:
+${data.paymentMethod}
+</p>
+
+<p>
+Transaction ID:
+${data.transactionId}
+</p>
+
+<p>
+Date:
+${new Date(
+data.createdAt
+).toLocaleString()}
+</p>
+
+<p class="${statusClass}">
+Status:
+${data.status}
+</p>
+
+</div>
+
+`;
+
+});
+
+}
+catch(error){
+
+container.innerHTML = `
+
+<div class="history-card">
+
+<h3>
+Error Loading Data
+</h3>
+
+<p>
+${error.message}
+</p>
+
+</div>
+
+`;
+
+}
+
+}
+</script>
+
+</body>
+</html>

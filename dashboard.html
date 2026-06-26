@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DASH BOARD</title>
+  <style>
+   *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#081120;
+min-height:100vh;
+padding:20px;
+overflow-x:hidden;
+position:relative;
+}
+
+/* Background */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+background:linear-gradient(
+135deg,
+#062032,
+#083a47,
+#0a6b5a
+);
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:#00e5ff;
+border-radius:50%;
+filter:blur(180px);
+opacity:.25;
+top:-150px;
+left:-150px;
+animation:float1 12s infinite alternate;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:#00ff88;
+border-radius:50%;
+filter:blur(180px);
+opacity:.25;
+bottom:-150px;
+right:-150px;
+animation:float2 12s infinite alternate;
+}
+
+@keyframes float1{
+100%{
+transform:translate(200px,200px);
+}
+}
+
+@keyframes float2{
+100%{
+transform:translate(-200px,-200px);
+}
+}
+
+/* Dashboard */
+
+.dashboard{
+position:relative;
+z-index:2;
+max-width:700px;
+margin:auto;
+}
+
+/* Header */
+
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.header h1{
+font-size:42px;
+color:#fff;
+margin-bottom:10px;
+text-shadow:0 0 20px #00e5ff;
+}
+
+.header p{
+color:#d1d5db;
+}
+
+/* Cards */
+
+.top-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-bottom:20px;
+}
+
+.info-card,
+.plan-card,
+.referral-card,
+.activity-card{
+background:#111827;
+border-radius:28px;
+padding:25px;
+text-align:center;
+position:relative;
+overflow:hidden;
+margin-bottom:20px;
+}
+
+.info-card::before,
+.plan-card::before,
+.referral-card::before,
+.activity-card::before,
+.menu-btn::before,
+#logoutBtn::before{
+content:"";
+position:absolute;
+inset:0;
+padding:4px;
+border-radius:28px;
+background:linear-gradient(
+90deg,
+#00e5ff,
+#00ff88,
+#00e5ff
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+animation:borderMove 4s linear infinite;
+}
+
+@keyframes borderMove{
+100%{
+filter:hue-rotate(360deg);
+}
+}
+
+.info-card h3,
+.plan-card h2,
+.referral-card h2,
+.activity-card h2{
+color:white;
+margin-bottom:15px;
+}
+
+.info-card h2{
+color:#00e5ff;
+font-size:32px;
+}
+
+.plan-card h3{
+color:#00ff88;
+font-size:28px;
+margin-bottom:10px;
+}
+
+.plan-card p{
+color:#fff;
+}
+
+/* Menu */
+
+.menu-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+margin-bottom:20px;
+}
+
+.menu-btn{
+height:90px;
+border:none;
+background:#111827;
+border-radius:25px;
+color:white;
+font-size:26px;
+font-weight:bold;
+cursor:pointer;
+position:relative;
+overflow:hidden;
+}
+
+/* Referral */
+
+#referralLink{
+width:100%;
+height:60px;
+border:none;
+outline:none;
+background:#1f2937;
+border-radius:18px;
+padding:15px;
+color:white;
+font-size:16px;
+margin:15px 0;
+}
+
+#copyBtn{
+width:100%;
+height:65px;
+border:none;
+border-radius:20px;
+background:#111827;
+color:white;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+position:relative;
+overflow:hidden;
+}
+
+/* Activity */
+
+.activity-card p{
+color:#9ca3af;
+font-size:22px;
+padding:20px 0;
+}
+
+/* Logout */
+
+#logoutBtn{
+width:100%;
+height:80px;
+border:none;
+background:#111827;
+border-radius:25px;
+color:white;
+font-size:28px;
+font-weight:bold;
+cursor:pointer;
+position:relative;
+overflow:hidden;
+margin-top:15px;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.top-grid,
+.menu-grid{
+grid-template-columns:1fr 1fr;
+}
+
+.header h1{
+font-size:34px;
+}
+
+.menu-btn{
+font-size:20px;
+height:80px;
+}
+
+}
+
+@media(max-width:480px){
+
+.top-grid,
+.menu-grid{
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.info-card,
+.plan-card,
+.referral-card,
+.activity-card{
+padding:18px;
+}
+
+.info-card h2{
+font-size:24px;
+}
+
+.plan-card h3{
+font-size:22px;
+}
+
+} 
+/* Floating Menu */
+
+.floating-menu{
+position:absolute;
+top:20px;
+right:20px;
+z-index:9999;
+}
+
+.menu-btn2{
+width:45px;
+height:45px;
+border:none;
+border-radius:50%;
+background:#00e5ff;
+color:#111827;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 15px #00e5ff;
+transition:.4s;
+}
+
+.menu-item{
+position:absolute;
+top:0;
+right:0;
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+background:#111827;
+border:1px solid rgba(0,229,255,.4);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+text-decoration:none;
+font-size:18px;
+
+opacity:0;
+visibility:hidden;
+
+transition:.4s;
+}
+
+.floating-menu.active .menu-btn2{
+transform:rotate(90deg);
+}
+
+.floating-menu.active .menu-item{
+opacity:1;
+visibility:visible;
+}
+
+/* Half Circle Menu */
+
+.floating-menu.active .item1{
+transform:translate(-60px,20px);
+}
+
+.floating-menu.active .item2{
+transform:translate(-95px,70px);
+}
+
+.floating-menu.active .item3{
+transform:translate(-95px,130px);
+}
+
+.floating-menu.active .item4{
+transform:translate(-60px,180px);
+}
+  </style>
+</head>
+<body>
+
+<div class="bg-animation"></div>
+
+<div class="dashboard">
+
+<!-- Header -->
+
+<div class="header">
+
+<h1>BULFEX</h1>
+
+<p id="welcomeText">
+Welcome User
+</p>
+
+</div>
+<div class="user-card">
+
+
+
+</div>
+<!-- Balance & Profit -->
+
+
+<div class="top-grid">
+
+<div class="info-card">
+<h3>💰 <br> Total Balance</h3>
+<h2 id="balance">0 PKR</h2>
+</div>
+
+<div class="info-card">
+<h3>📈 <br> Daily Profit</h3>
+<h2 id="profit">0 PKR</h2>
+</div>
+
+<div class="info-card">
+<h3>📥<br> Total Deposit</h3>
+<h2 id="totalDeposit">0 PKR</h2>
+</div>
+
+<div class="info-card">
+<h3>📤<br> Total Withdraw</h3>
+<h2 id="totalWithdraw">0 PKR</h2>
+</div>
+
+</div>
+<!-- Active Plan -->
+
+<div class="plan-card">
+
+<h2>
+📦 Active Plan
+</h2>
+
+<h3 id="activePlan">
+No Active Plan
+</h3>
+
+<p id="planAmount">
+0 PKR
+</p>
+
+</div>
+
+<!-- Menu -->
+
+<div class="menu-grid">
+
+<button
+class="menu-btn"
+onclick="location.href='deposit.html'">
+
+💰 Deposit
+
+</button>
+
+<button
+class="menu-btn"
+onclick="location.href='withdraw.html'">
+
+💸 Withdraw
+
+</button>
+
+<button
+class="menu-btn"
+onclick="location.href='profit.html'">
+
+🎁 Profit
+
+</button>
+
+<button
+class="menu-btn"
+onclick="location.href='team.html'">
+
+👥  Active Team
+
+</button>
+
+</div>
+
+<!-- Referral -->
+
+<div class="referral-card">
+
+<h2>
+Your Referral Link
+</h2>
+<input type="text" id="referralCode" readonly>
+<input
+type="text"
+id="referralLink"
+readonly>
+
+<button
+id="copyBtn">
+
+📋 Copy Link
+
+</button>
+
+</div>
+
+<!-- Activity -->
+
+<div class="activity-card">
+
+<h2>
+Recent Activity
+</h2>
+
+<p id="activityText">
+No Activity Yet
+</p>
+
+</div>
+
+<!-- Logout -->
+
+<button
+id="logoutBtn">
+
+🚪 Logout
+
+</button>
+
+</div>
+<div class="floating-menu">
+
+<button id="menuBtn" class="menu-btn2">
+☰
+</button>
+
+<a href="deposithistory.html"
+class="menu-item item1">
+📥
+</a>
+
+<a href="withdrawhistory.html"
+class="menu-item item2">
+📤
+</a>
+
+<a href="profile.html"
+class="menu-item item3">
+👤
+</a>
+
+<a href="login.html"
+class="menu-item item4">
+🚪
+</a>
+
+</div>
+<script type="module">
+  import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged,
+signOut
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
+
+/* LOAD USER DATA */
+
+async function loadDashboard(user){
+
+try{
+
+const userRef =
+doc(db,"users",user.uid);
+
+const userSnap =
+await getDoc(userRef);
+
+if(!userSnap.exists()){
+
+return;
+
+}
+
+const data =
+userSnap.data();
+
+
+/* Welcome */
+
+document.getElementById(
+"welcomeText"
+).innerText =
+"Welcome " +
+(data.name || "User");
+
+
+/* Total Balance */
+
+document.getElementById(
+"balance"
+).innerText =
+(data.profit || 0)
++ " PKR";
+
+
+/* Daily Profit */
+
+let dailyIncome = 0;
+
+switch(data.activePlan){
+
+case "Basic Plan":
+dailyIncome = 25;
+break;
+
+case "Starter Plan":
+dailyIncome = 50;
+break;
+
+case "Silver Plan":
+dailyIncome = 120;
+break;
+
+case "Gold Plan":
+dailyIncome = 180;
+break;
+
+case "Diamond Plan":
+dailyIncome = 229;
+break;
+
+case "VIP Plan":
+dailyIncome = 300;
+break;
+
+case "Premium Plan":
+dailyIncome = 900;
+break;
+
+case "Elite Plan":
+dailyIncome = 1200;
+break;
+
+}
+
+document.getElementById(
+"profit"
+).innerText =
+dailyIncome + " PKR";
+
+
+/* Total Deposit */
+
+document.getElementById(
+"totalDeposit"
+).innerText =
+(data.totalDeposit || 0)
++ " PKR";
+
+
+/* Total Withdraw */
+
+document.getElementById(
+"totalWithdraw"
+).innerText =
+(data.totalWithdraw || 0)
++ " PKR";
+/* Active Plan */
+
+document.getElementById(
+"activePlan"
+).innerText =
+data.activePlan ||
+"No Active Plan";
+
+
+/* Plan Amount */
+
+document.getElementById(
+"planAmount"
+).innerText =
+(data.planAmount || 0)
++ " PKR";
+
+
+const referralLink =
+window.location.origin +
+"/signup.html?ref=" +
+data.referralCode;
+
+document.getElementById(
+"referralLink"
+).value =
+referralLink;
+
+document.getElementById(
+"referralCode"
+).value =
+data.referralCode;
+
+/* Recent Activity */
+
+if(data.activePlan){
+
+document.getElementById(
+"activityText"
+).innerText =
+"Active Plan: " +
+data.activePlan;
+
+}else{
+
+document.getElementById(
+"activityText"
+).innerText =
+"No Activity Yet";
+
+}
+
+}catch(error){ 
+console.log(error);
+
+}
+
+}
+
+
+/* COPY REFERRAL LINK */
+
+document
+.getElementById("copyBtn")
+.addEventListener("click",()=>{
+
+const link =
+document.getElementById(
+"referralLink"
+);
+
+link.select();
+
+document.execCommand("copy");
+
+Swal.fire({
+icon:"success",
+title:"Copied",
+text:"Referral Link Copied"
+});
+
+});
+
+
+/* LOGOUT */
+
+document
+.getElementById("logoutBtn")
+.addEventListener("click",async()=>{
+
+await signOut(auth);
+
+window.location.href =
+"login.html";
+
+});
+
+
+/* AUTH CHECK */
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+if(user){
+
+loadDashboard(user);
+
+}else{
+
+window.location.href =
+"login.html";
+
+}
+
+});
+
+window.addEventListener(
+"load",
+()=>{
+
+const menu =
+document.querySelector(
+".floating-menu"
+);
+
+document
+.getElementById("menuBtn")
+.addEventListener(
+"click",
+()=>{
+
+menu.classList.toggle(
+"active"
+);
+
+});
+
+});
+</script>
+
+</body>
+</html>

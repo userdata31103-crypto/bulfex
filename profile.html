@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<style>
+  *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+background:#0b1120;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+overflow-x:hidden;
+position:relative;
+}
+
+/* Background */
+
+.bg-animation{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0b1120;
+z-index:0;
+overflow:hidden;
+}
+
+.bg-animation::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:#00e5ff;
+border-radius:50%;
+filter:blur(180px);
+top:-180px;
+left:-180px;
+opacity:.35;
+}
+
+.bg-animation::after{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:#00ff88;
+border-radius:50%;
+filter:blur(180px);
+bottom:-180px;
+right:-180px;
+opacity:.35;
+}
+
+/* Back Button */
+
+.back-btn{
+position:fixed;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+border-radius:50%;
+background:#00e5ff;
+color:#111827;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 0 15px #00e5ff;
+transition:.3s;
+z-index:999;
+}
+
+.back-btn:hover{
+transform:scale(1.1);
+}
+
+/* Container */
+
+.container{
+position:relative;
+z-index:2;
+width:100%;
+max-width:420px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+border:1px solid rgba(0,229,255,.3);
+border-radius:20px;
+padding:25px;
+}
+
+.container h1{
+text-align:center;
+color:#00e5ff;
+margin-bottom:25px;
+text-shadow:0 0 15px #00e5ff;
+}
+
+/* Labels */
+
+label{
+display:block;
+color:#fff;
+margin-bottom:8px;
+margin-top:15px;
+}
+
+/* Inputs */
+
+input{
+width:100%;
+height:50px;
+border:none;
+outline:none;
+border-radius:12px;
+padding:0 15px;
+background:#1e293b;
+color:#fff;
+font-size:15px;
+}
+
+input::placeholder{
+color:#94a3b8;
+}
+
+/* Save Button */
+
+.save-btn{
+width:100%;
+height:50px;
+margin-top:25px;
+border:none;
+border-radius:12px;
+background:#00e5ff;
+color:#111827;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.save-btn:hover{
+transform:scale(1.03);
+box-shadow:0 0 20px #00e5ff;
+}
+
+/* Logout Button */
+
+.logout-btn{
+width:100%;
+height:50px;
+margin-top:15px;
+border:none;
+border-radius:12px;
+background:#ff3b3b;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.logout-btn:hover{
+transform:scale(1.03);
+box-shadow:0 0 20px #ff3b3b;
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.container{
+padding:20px;
+}
+
+.container h1{
+font-size:28px;
+}
+
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+<a href="dashboard.html"
+class="back-btn">
+←
+</a>
+
+<div class="bg-animation"></div>
+
+<div class="container">
+
+<h1>👤 My Profile</h1>
+
+<form id="profileForm">
+
+<label>
+Full Name
+</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter Your Name">
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+id="email"
+readonly>
+
+<label>
+New Password
+</label>
+
+<input
+type="password"
+id="newPassword"
+placeholder="Enter New Password">
+
+<label>
+Confirm Password
+</label>
+
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm Password">
+
+<button
+type="submit"
+class="save-btn">
+
+💾 Save Changes
+
+</button>
+
+</form>
+
+<button
+id="logoutBtn"
+class="logout-btn">
+
+🚪 Logout
+
+</button>
+
+</div>
+<script type="module">
+  import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged,
+updatePassword,
+signOut
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+getDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBp81poxZsi309XEDDBKWmTrzD91Et7lNE",
+
+authDomain: "bulfex.firebaseapp.com",
+
+projectId: "bulfex",
+
+storageBucket: "bulfex.firebasestorage.app",
+
+messagingSenderId: "217833665645",
+
+appId: "1:217833665645:web:c03a94745887a2be033b64"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async(user)=>{
+
+if(!user){
+
+window.location.href="login.html";
+return;
+
+}
+
+currentUser = user;
+
+const userRef = doc(db,"users",user.uid);
+
+const userSnap = await getDoc(userRef);
+
+if(userSnap.exists()){
+
+const data = userSnap.data();
+
+document.getElementById("name").value =
+data.name || "";
+
+document.getElementById("email").value =
+data.email || "";
+
+}
+
+});
+
+document
+.getElementById("profileForm")
+.addEventListener("submit",
+async(e)=>{
+
+e.preventDefault();
+
+const name =
+document.getElementById("name").value;
+
+const newPassword =
+document.getElementById("newPassword").value;
+
+const confirmPassword =
+document.getElementById("confirmPassword").value;
+
+try{
+
+await updateDoc(
+doc(db,"users",currentUser.uid),
+{
+name:name
+}
+);
+
+if(newPassword !== ""){
+
+if(newPassword !== confirmPassword){
+
+Swal.fire({
+icon:"error",
+title:"Passwords do not match"
+});
+
+return;
+
+}
+
+await updatePassword(
+currentUser,
+newPassword
+);
+
+}
+
+Swal.fire({
+icon:"success",
+title:"Profile Updated"
+});
+
+document.getElementById("newPassword").value="";
+document.getElementById("confirmPassword").value="";
+
+}catch(error){
+
+Swal.fire({
+icon:"error",
+title:"Error",
+text:error.message
+});
+
+}
+
+});
+
+document
+.getElementById("logoutBtn")
+.addEventListener("click",
+async()=>{
+
+await signOut(auth);
+
+window.location.href="login.html";
+
+});
+</script>
+
+</body>
+
+</html>
