@@ -376,6 +376,116 @@ transform:translate(-95px,130px);
 .floating-menu.active .item4{
 transform:translate(-60px,180px);
 }
+    .footer{
+
+margin-top:50px;
+padding:30px 20px;
+
+background:#0d1117;
+
+border-top:2px solid #00e5ff;
+
+text-align:center;
+
+box-shadow:0 -5px 20px rgba(0,229,255,.25);
+
+animation:fadeUp .8s ease;
+
+}
+
+.footer-logo{
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#00e5ff;
+
+text-shadow:0 0 15px #00e5ff;
+
+margin-bottom:10px;
+
+}
+
+.footer-text{
+
+color:#ddd;
+
+font-size:15px;
+
+margin-bottom:20px;
+
+}
+
+.footer-links{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.footer-links a{
+
+text-decoration:none;
+
+color:#fff;
+
+padding:12px;
+
+border:2px solid #00e5ff;
+
+border-radius:12px;
+
+transition:.3s;
+
+font-weight:bold;
+
+}
+
+.footer-links a:hover{
+
+background:#00e5ff;
+
+color:#000;
+
+box-shadow:0 0 20px #00e5ff;
+
+transform:scale(1.05);
+
+}
+
+.copyright{
+
+margin-top:20px;
+
+font-size:13px;
+
+color:#888;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
     
   </style>
 </head>
@@ -527,7 +637,35 @@ id="logoutBtn">
 🚪 Logout
 
 </button>
+<footer class="footer">
 
+<div class="footer-logo">
+💎 BULFEX
+</div>
+
+<p class="footer-text">
+Secure Investment Platform
+</p>
+
+<div class="footer-links">
+
+<a href="https://whatsapp.com/channel/0029VbCzT1t23n3XVK1uud0Y"
+target="_blank">
+📢 Join WhatsApp Channel
+</a>
+
+<a href="https://wa.me/923196470733"
+target="_blank">
+👨‍💻 Contact Admin
+</a>
+
+</div>
+
+<p class="copyright">
+© 2026 BULFEX • All Rights Reserved
+</p>
+
+</footer>
 </div>
 <div class="floating-menu">
 
