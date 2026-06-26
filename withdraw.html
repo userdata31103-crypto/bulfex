@@ -559,8 +559,18 @@ const userData =
 userSnap.data();
 
 const availableBalance =
-userData.profit || 0;
+userData.balance || 0;
+if(amount < 300){
 
+Swal.fire({
+icon:"warning",
+title:"Minimum Withdraw",
+text:"Minimum withdraw amount is 300 PKR"
+});
+
+return;
+
+  }
 if(amount > availableBalance){
 
 Swal.fire({
