@@ -321,26 +321,111 @@ messagingSenderId: "217833665645",
 appId: "1:217833665645:web:c03a94745887a2be033b64"
 
 };
-
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
 const db = getFirestore(app);
-const user = auth.currentUser;
 
-const planProfit = {
-"Basic Plan":25,
-"Starter Plan":50,
-"Silver Plan":120,
-"Gold Plan":180,
-"Diamond Plan":229,
-"VIP Plan":300,
-"Premium Plan":900,
-"Elite Plan":1200
-};
+
+/* RANDOM DAILY PROFIT */
+
+function getDailyProfit(plan){
+
+switch(plan){
+
+case "Plan 530":
+return Math.floor(Math.random()*3)+85;
+
+case "Plan 1250":
+return Math.floor(Math.random()*5)+190;
+
+case "Plan 1965":
+return Math.floor(Math.random()*4)+390;
+
+case "Plan 3387":
+return Math.floor(Math.random()*4)+670;
+
+case "Plan 5569":
+return Math.floor(Math.random()*6)+905;
+
+case "Plan 7968":
+return Math.floor(Math.random()*11)+1300;
+
+case "Plan 12780":
+return Math.floor(Math.random()*8)+2120;
+
+case "Plan 20179":
+return Math.floor(Math.random()*11)+3350;
+
+case "Plan 31780":
+return Math.floor(Math.random()*8)+5270;
+
+case "Plan 59765":
+return Math.floor(Math.random()*5)+9940;
+
+case "Plan 88975":
+return Math.floor(Math.random()*8)+14770;
+
+case "Plan 122775":
+return Math.floor(Math.random()*5)+20440;
+
+case "Plan 160765":
+return Math.floor(Math.random()*8)+26770;
+
+case "Plan 496880":
+return Math.floor(Math.random()*401)+99500;
+
+default:
+return 0;
+
+}
+
+}
+
+
+/* LOAD USER DATA */
 
 async function loadUserData(){
+
+const user = auth.currentUser;
+
+if(!user) return;
+
+const userRef = doc(db,"users",user.uid);
+
+const userSnap = await getDoc(userRef);
+
+if(!userSnap.exists()) return;
+
+const data = userSnap.data();
+
+document.getElementById("planName").innerText =
+data.activePlan || "No Active Plan";
+
+document.getElementById("planAmount").innerText =
+(data.planAmount || 0) + " PKR";
+
+document.getElementById("totalProfit").innerText =
+(data.profit || 0) + " PKR";
+
+const daily =
+getDailyProfit(data.activePlan);
+
+document.getElementById("dailyProfit").innerText =
+daily + " PKR";
+
+document.getElementById("lastClaim").innerText =
+data.lastClaim
+? new Date(data.lastClaim).toLocaleString()
+: "Never";
+
+ }
+ /* CLAIM BUTTON */
+
+document
+.getElementById("claimBtn")
+.addEventListener("click", async()=>{
 
 const user = auth.currentUser;
 
@@ -354,54 +439,9 @@ await getDoc(userRef);
 
 if(!userSnap.exists()) return;
 
-const data =
-userSnap.data();
+const data = userSnap.data();
 
-document.getElementById("planName")
-.innerText =
-data.activePlan || "No Active Plan";
-
-document.getElementById("planAmount")
-.innerText =
-(data.planAmount || 0) + " PKR";
-
-document.getElementById("totalProfit")
-.innerText =
-(data.profit || 0) + " PKR";
-
-const daily =
-planProfit[data.activePlan] || 0;
-
-document.getElementById("dailyProfit")
-.innerText =
-daily + " PKR";
-
-document.getElementById("lastClaim")
-.innerText =
-data.lastClaim
-? new Date(data.lastClaim)
-.toLocaleString()
-: "Never";
-
-}
-
-document
-.getElementById("claimBtn")
-.addEventListener("click",async()=>{
-
-const user =
-auth.currentUser;
-
-if(!user) return;
-
-const userRef =
-doc(db,"users",user.uid);
-
-const userSnap =
-await getDoc(userRef);
-
-const data =
-userSnap.data();
+/* Check Active Plan */
 
 if(!data.activePlan){
 
@@ -411,7 +451,10 @@ title:"No Active Plan"
 });
 
 return;
+
 }
+
+/* 24 Hours Check */
 
 const now = Date.now();
 
@@ -420,56 +463,63 @@ data.lastClaim
 ? new Date(data.lastClaim).getTime()
 : 0;
 
-const diff =
-now - lastClaim;
-
 const hours24 =
 24 * 60 * 60 * 1000;
+
+const diff =
+now - lastClaim;
 
 if(diff < hours24){
 
 const remaining =
-Math.ceil(
-(hours24 - diff)
-/1000/60/60
-);
+Math.ceil((hours24 - diff) / 1000 / 60 / 60);
 
 Swal.fire({
 icon:"warning",
 title:"Already Claimed",
-text:
-"Wait " +
-remaining +
-" hours"
+text:"Wait " + remaining + " Hours"
 });
 
 return;
+
 }
 
+/* Random Profit */
+
 const daily =
-planProfit[data.activePlan] || 0;
+getDailyProfit(data.activePlan);
+
+/* Update Firebase */
 
 await updateDoc(userRef,{
 
 profit:
-(data.profit || 0)
-+ daily,
+(data.profit || 0) + daily,
+
+balance:
+(data.balance || 0) + daily,
 
 lastClaim:
 new Date().toISOString()
 
 });
 
+/* Success */
+
 Swal.fire({
 icon:"success",
 title:"Profit Claimed",
-text:
-daily + " PKR Added"
+text: daily + " PKR Added Successfully"
 });
+
+/* Reload Data */
 
 loadUserData();
 
 });
+
+
+/* AUTH CHECK */
 
 onAuthStateChanged(
 auth,
@@ -479,9 +529,15 @@ if(user){
 
 loadUserData();
 
+}else{
+
+window.location.href =
+"login.html";
+
 }
 
 });
+
 </script>
 
 </body>
