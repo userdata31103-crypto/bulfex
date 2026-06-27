@@ -772,15 +772,16 @@ document.getElementById(
 "Welcome " +
 (data.name || "User");
 
-
 /* Total Balance */
+
+const totalBalance =
+(data.profit || 0) +
+(data.referralIncome || 0);
 
 document.getElementById(
 "balance"
 ).innerText =
-(data.profit || 0)
-+ " PKR";
-
+totalBalance + " PKR";
 
 /* Daily Profit */
 
