@@ -785,42 +785,68 @@ document.getElementById(
 /* Daily Profit */
 
 let dailyIncome = 0;
-
 switch(data.activePlan){
 
-case "Basic Plan":
-dailyIncome = 25;
+case "Plan 530":
+dailyIncome = "85-87";
 break;
 
-case "Starter Plan":
-dailyIncome = 50;
+case "Plan 1250":
+dailyIncome = "190-194";
 break;
 
-case "Silver Plan":
-dailyIncome = 120;
+case "Plan 1965":
+dailyIncome = "390-393";
 break;
 
-case "Gold Plan":
-dailyIncome = 180;
+case "Plan 3387":
+dailyIncome = "670-673";
 break;
 
-case "Diamond Plan":
-dailyIncome = 229;
+case "Plan 5569":
+dailyIncome = "905-910";
 break;
 
-case "VIP Plan":
-dailyIncome = 300;
+case "Plan 7968":
+dailyIncome = "1300-1310";
 break;
 
-case "Premium Plan":
-dailyIncome = 900;
+case "Plan 12780":
+dailyIncome = "2120-2127";
 break;
 
-case "Elite Plan":
-dailyIncome = 1200;
+case "Plan 20179":
+dailyIncome = "3350-3360";
 break;
 
-}
+case "Plan 31780":
+dailyIncome = "5270-5277";
+break;
+
+case "Plan 59765":
+dailyIncome = "9940-9944";
+break;
+
+case "Plan 88975":
+dailyIncome = "14770-14777";
+break;
+
+case "Plan 122775":
+dailyIncome = "20440-20444";
+break;
+
+case "Plan 160765":
+dailyIncome = "26770-26777";
+break;
+
+case "Plan 496880":
+dailyIncome = "99500-99900";
+break;
+
+default:
+dailyIncome = 0;
+
+  }
 
 document.getElementById(
 "profit"
